@@ -1,8 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 import SplashScreen from './src/pages/splashScreen';
-import Home from './src/pages/home';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+import Navigation from './src/pages/navigation';
 
 export default function App() {
 
@@ -17,7 +17,7 @@ export default function App() {
 
   return (
     <>
-      {loading ? <SplashScreen /> : <Home /> }
+      {loading ? <SplashScreen /> : <Navigation /> }
       <StatusBar style="auto" />
     </>
   );

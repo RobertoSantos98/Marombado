@@ -2,8 +2,18 @@ import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView }
 import { Colors } from '../../utils/colors';
 import BoxTreino from '../../components/boxTreino';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../types/navigation';
 
-export default function Home() {
+
+type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
+
+type Props = {
+  navigation: HomeScreenNavigationProp;
+};
+
+
+export default function Home({ navigation }: Props) {
  return (
    <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -71,7 +81,10 @@ export default function Home() {
         <ScrollView>
             <BoxTreino />
 
-            <TouchableOpacity style={{width: '100%', height: 40, backgroundColor: Colors.TextCinza, borderRadius: 10, marginVertical: 10, alignItems: 'center', justifyContent: 'center'}} >
+            <TouchableOpacity 
+            style={{width: '100%', height: 40, backgroundColor: Colors.TextCinza, borderRadius: 10, marginVertical: 10, alignItems: 'center', justifyContent: 'center'}}
+            onPress={() => navigation.navigate('AdicionarTreino')}
+            >
               <MaterialCommunityIcons name='plus-thick' size={24} color={Colors.Vermelho} />
             </TouchableOpacity>
 
