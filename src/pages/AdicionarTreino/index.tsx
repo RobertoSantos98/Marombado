@@ -4,22 +4,57 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { Colors } from '../../utils/colors';
 import InputBox from '../../components/InputBox';
+import { Treino, Exercicio } from '../../types/treinoModel';
+import { ExercicioService } from '../../service/ExercicioService';
 
 export default function AdicionarTreino() {
 
-    const [contadorTreino, setContadorTreino] = useState(1);
-    const [treino, setTreino] = useState([
-        { id: 1, name: 'Supino Reto', series: 4, reps: 12, carga: 15 },
-        { id: 2, name: 'Agachamento Livre', series: 4, reps: 12, carga: 25 },
-    ]);
+    const [treino, setTreino] = useState<Exercicio[]>([]);
+    
+    const [ nomeTreino, setNomeTreino ] = useState('');
+    const [ dataTreino, setDataTreino ] = useState(new Date().toISOString().split('T')[0]); // Formato YYYY-MM-DD
+    const [ nomeExercicio, setNomeExercicio ] = useState('');
+    const [ series, setSeries ] = useState('');
+    const [ reps, setReps ] = useState('');
+    const [ carga, setCarga ] = useState('');
 
-    const handleAddTreino = () => {
-        setContadorTreino(prev => prev + 1);
+    const handleAddExercicio = () => {
+        if (nomeExercicio && series && reps && carga) {
+            const newExercicio: Exercicio = {
+                nome: nomeExercicio,
+                series: parseInt(series),
+                reps: parseInt(reps),
+                carga: parseFloat(carga),
+            };
+            setTreino(prev => [...prev, newExercicio]);
+
+            setNomeExercicio('');
+            setSeries('');
+            setReps('');
+            setCarga('');
+        }
     };
 
-    const handleRemoveTreino = (id: any) => {
-    setTreino(prev => prev.filter(item => item.id !== id));
+    const handleRemoveTreino = (nome: string) => {
+    setTreino(prev => prev.filter(item => item.nome !== nome));
 };
+
+    const handleSalvarTreino = async () => {
+        const treinoData: Treino = {
+            id: Math.random().toString(36).substring(2, 15),
+            nome: nomeTreino,
+            data: dataTreino,
+            exercicios: treino
+        }
+
+        try {
+            await ExercicioService.salvarTreino(treinoData);
+            console.log('Treino salvo com sucesso:', treinoData);
+        } catch (error) {
+            console.error('Erro ao salvar treino:', error);
+            
+        }
+    }
 
 
     return (
@@ -34,6 +69,8 @@ export default function AdicionarTreino() {
                 <View style={{ flexDirection: 'row', marginBottom: 12, alignItems: 'center' }}>
                     <Text style={styles.Text}>Treinos: </Text>
                     <TextInput
+                        value={nomeTreino}
+                        onChangeText={setNomeTreino}
                         style={styles.input}
                         placeholder='Dia da Semana'
                         placeholderTextColor={Colors.Branco}
@@ -49,19 +86,28 @@ export default function AdicionarTreino() {
 
                 <ScrollView>
                     {treino.map((item) => (
-                        <View key={item.id} style={styles.tableRow}>
-                            <Text style={styles.cell}>{item.name}</Text>
+                        <View key={item.nome} style={styles.tableRow}>
+                            <Text style={styles.cell}>{item.nome}</Text>
                             <Text style={styles.cell}>{item.series}</Text>
                             <Text style={styles.cell}>{item.reps}</Text>
                             <Text style={styles.cell}>{item.carga}</Text>
-                            <TouchableOpacity onPress={() => handleRemoveTreino(item.id)}>
+                            <TouchableOpacity onPress={() => handleRemoveTreino(item.nome)}>
                                 <MaterialCommunityIcons name="trash-can" size={24} color={Colors.Vermelho} />
                             </TouchableOpacity>
                         </View>
                     ))}
                 </ScrollView>
 
-                <InputBox index={contadorTreino} />
+                <View style={{width: '100%', flexDirection: 'row', alignItems: 'center', marginTop: 12}}>
+                    <ScrollView horizontal>
+                        <View style={{flexDirection: 'row'}}>
+                            <TextInput value={nomeExercicio} onChangeText={setNomeExercicio} style={[styles.inputBox, {width: 300}]} placeholder="Digite o exercício..." placeholderTextColor={Colors.Branco}/>
+                            <TextInput value={series} onChangeText={setSeries} style={[styles.inputBox, {width: 60}]} placeholder="Séries" placeholderTextColor={Colors.Branco} keyboardType='numeric'/>
+                            <TextInput value={reps} onChangeText={setReps} style={[styles.inputBox, {width: 60}]} placeholder="Repetições" placeholderTextColor={Colors.Branco} keyboardType='numeric'/>
+                            <TextInput value={carga} onChangeText={setCarga} style={[styles.inputBox, {width: 60}]} placeholder="Carga Atual" placeholderTextColor={Colors.Branco} keyboardType='numeric'/>
+                        </View>
+                    </ScrollView>
+                   </View>
             </View>
 
             <View style={{ position: 'absolute', bottom: 0, width: '100%' }}>
@@ -75,11 +121,11 @@ export default function AdicionarTreino() {
                         alignItems: 'center',
                         justifyContent: 'center'
                     }}
-                    onPress={handleAddTreino}
+                    onPress={handleAddExercicio}
                 >
                     <MaterialCommunityIcons name='plus-thick' size={24} color={Colors.Vermelho} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.buttonSalvar}>
+                <TouchableOpacity style={styles.buttonSalvar} onPress={handleSalvarTreino}>
                     <Text style={[styles.Text, { fontWeight: 'bold' }]}>Salvar Treino</Text>
                 </TouchableOpacity>
             </View>
@@ -149,4 +195,16 @@ const styles = StyleSheet.create({
     headerText: {
         fontWeight: 'bold',
     },
+    inputBox: {
+    height: 45,
+    fontSize: 14,
+    color: Colors.Branco,
+    borderColor: Colors.Vermelho,
+    borderBottomWidth: 3,
+    marginBottom: 12,
+    paddingHorizontal: 10,
+    backgroundColor: Colors.TextCinza,
+    marginRight: 8
+  },
+
 });

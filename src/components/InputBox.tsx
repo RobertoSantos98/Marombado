@@ -2,10 +2,9 @@ import { View, StyleSheet, Text, TextInput, ScrollView } from 'react-native';
 
 import { Colors } from '../utils/colors';
 
-export default function InputBox({index}: any) {
+export default function InputBox() {
  return (
-   <View style={{width: '100%', flexDirection: 'row', alignItems: 'center'}}>
-    <Text style={styles.text} >{index} - </Text>
+   <View style={{width: '100%', flexDirection: 'row', alignItems: 'center', marginTop: 12}}>
     <ScrollView horizontal>
         <View style={{flexDirection: 'row'}}>
             <TextInput style={[styles.input, {width: 300}]} placeholder="Digite o exercício..." placeholderTextColor={Colors.Branco}/>

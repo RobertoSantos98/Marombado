@@ -1,0 +1,13 @@
+export type Exercicio = {
+    nome: string;
+    series: number;
+    reps: number;
+    carga: number;
+}
+
+export type Treino = {
+    id: string;
+    nome: string;
+    data: string;
+    exercicios: Exercicio[];
+}
