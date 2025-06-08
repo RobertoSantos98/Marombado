@@ -4,6 +4,11 @@ import BoxTreino from '../../components/boxTreino';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../types/navigation';
+import { useEffect, useState } from 'react';
+import { Treino } from '../../types/treinoModel';
+
+import { ExercicioService } from '../../service/ExercicioService';
+import TreinoDetails from '../TreinoDetails';
 
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
@@ -14,6 +19,24 @@ type Props = {
 
 
 export default function Home({ navigation }: Props) {
+
+  const [listTreinos, setListTreinos] = useState<Treino[]>([]);
+
+  useEffect(() => {
+    handleListTreinos();
+  }, []);
+
+  const handleListTreinos = async () => {
+    try {
+      const treinos = await ExercicioService.listarTreinos();
+      setListTreinos(treinos);
+      console.log("Treinos listados com sucesso:", treinos);
+    } catch (error) {
+      console.error("Erro ao listar treinos:", error);
+    }
+  }
+
+
  return (
    <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -79,11 +102,13 @@ export default function Home({ navigation }: Props) {
 
       <View style={styles.contentMain}>
         <ScrollView>
-            <BoxTreino />
+            {listTreinos.map((treino) => (
+              <BoxTreino key={treino.id} id={treino.id} diaSemana={treino.diaSemana} nomeTreino={treino.nome} />
+            ))}
 
-            <TouchableOpacity 
-            style={{width: '100%', height: 40, backgroundColor: Colors.TextCinza, borderRadius: 10, marginVertical: 10, alignItems: 'center', justifyContent: 'center'}}
-            onPress={() => navigation.navigate('AdicionarTreino')}
+            <TouchableOpacity
+              style={{ width: '100%', height: 40, backgroundColor: Colors.TextCinza, borderRadius: 10, marginVertical: 10, alignItems: 'center', justifyContent: 'center' }}
+              onPress={() => navigation.navigate('AdicionarTreino')}
             >
               <MaterialCommunityIcons name='plus-thick' size={24} color={Colors.Vermelho} />
             </TouchableOpacity>

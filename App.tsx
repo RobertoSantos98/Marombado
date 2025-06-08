@@ -1,8 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import SplashScreen from './src/pages/splashScreen';
 import React, { useEffect, useState } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import Navigation from './src/pages/navigation';
+import TreinoDetails from './src/pages/TreinoDetails';
 
 export default function App() {
 
@@ -16,10 +18,10 @@ export default function App() {
   }, []);
 
   return (
-    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       {loading ? <SplashScreen /> : <Navigation /> }
       <StatusBar style="auto" />
-    </>
+    </GestureHandlerRootView>
   );
 }
 

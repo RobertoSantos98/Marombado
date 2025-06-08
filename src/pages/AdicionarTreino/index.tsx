@@ -1,13 +1,23 @@
 import { View, StyleSheet, Text, ImageBackground, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { useState } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../types/navigation';
 
 import { Colors } from '../../utils/colors';
 import InputBox from '../../components/InputBox';
 import { Treino, Exercicio } from '../../types/treinoModel';
 import { ExercicioService } from '../../service/ExercicioService';
 
-export default function AdicionarTreino() {
+
+type AdicionarTreinoNavigationProp = StackNavigationProp<RootStackParamList, 'AdicionarTreino'>;
+
+type Props = {
+  navigation: AdicionarTreinoNavigationProp;
+};
+
+
+export default function AdicionarTreino({ navigation }: Props) {
 
     const [treino, setTreino] = useState<Exercicio[]>([]);
     
@@ -17,6 +27,7 @@ export default function AdicionarTreino() {
     const [ series, setSeries ] = useState('');
     const [ reps, setReps ] = useState('');
     const [ carga, setCarga ] = useState('');
+    const [ diaSemana, setDiaSemana ] = useState('');
 
     const handleAddExercicio = () => {
         if (nomeExercicio && series && reps && carga) {
@@ -42,6 +53,7 @@ export default function AdicionarTreino() {
     const handleSalvarTreino = async () => {
         const treinoData: Treino = {
             id: Math.random().toString(36).substring(2, 15),
+            diaSemana: diaSemana,
             nome: nomeTreino,
             data: dataTreino,
             exercicios: treino
@@ -50,6 +62,8 @@ export default function AdicionarTreino() {
         try {
             await ExercicioService.salvarTreino(treinoData);
             console.log('Treino salvo com sucesso:', treinoData);
+            navigation.navigate('Home');
+
         } catch (error) {
             console.error('Erro ao salvar treino:', error);
             
@@ -66,15 +80,24 @@ export default function AdicionarTreino() {
             </View>
 
             <View style={styles.content}>
-                <View style={{ flexDirection: 'row', marginBottom: 12, alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', marginBottom: 12 }}>
                     <Text style={styles.Text}>Treinos: </Text>
-                    <TextInput
-                        value={nomeTreino}
-                        onChangeText={setNomeTreino}
-                        style={styles.input}
-                        placeholder='Dia da Semana'
-                        placeholderTextColor={Colors.Branco}
-                    />
+                    <View  style={{width: '100%', gap: 8}}>
+                        <TextInput
+                            value={diaSemana}
+                            onChangeText={setDiaSemana}
+                            style={styles.input}
+                            placeholder='Dia da Semana'
+                            placeholderTextColor={Colors.Branco}
+                        />
+                        <TextInput
+                            value={nomeTreino}
+                            onChangeText={setNomeTreino}
+                            style={styles.input}
+                            placeholder='Nome do Treino'
+                            placeholderTextColor={Colors.Branco}
+                        />
+                    </View>
                 </View>
 
                 <View style={styles.tableHeader}>

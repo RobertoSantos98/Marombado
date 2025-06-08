@@ -7,6 +7,7 @@ export type Exercicio = {
 
 export type Treino = {
     id: string;
+    diaSemana: string;
     nome: string;
     data: string;
     exercicios: Exercicio[];
