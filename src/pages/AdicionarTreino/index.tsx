@@ -21,6 +21,7 @@ export default function AdicionarTreino({ navigation }: Props) {
 
     const [treino, setTreino] = useState<Exercicio[]>([]);
     
+    const [ id, setId ] = useState<number>(1);
     const [ nomeTreino, setNomeTreino ] = useState('');
     const [ dataTreino, setDataTreino ] = useState(new Date().toISOString().split('T')[0]); // Formato YYYY-MM-DD
     const [ nomeExercicio, setNomeExercicio ] = useState('');
@@ -32,6 +33,7 @@ export default function AdicionarTreino({ navigation }: Props) {
     const handleAddExercicio = () => {
         if (nomeExercicio && series && reps && carga) {
             const newExercicio: Exercicio = {
+                id: id,
                 nome: nomeExercicio,
                 series: parseInt(series),
                 reps: parseInt(reps),
@@ -43,6 +45,7 @@ export default function AdicionarTreino({ navigation }: Props) {
             setSeries('');
             setReps('');
             setCarga('');
+            setId(id + 1);
         }
     };
 
