@@ -1,34 +1,35 @@
-import { View, StyleSheet, Text, ImageBackground, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { View, StyleSheet, Text, ImageBackground, TouchableOpacity, ScrollView, TextInput, BackHandler, Alert, FlatList } from 'react-native';
 import { useState } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../types/navigation';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { Colors } from '../../utils/colors';
-import InputBox from '../../components/InputBox';
 import { Treino, Exercicio } from '../../types/treinoModel';
 import { ExercicioService } from '../../service/ExercicioService';
+import React from 'react';
 
 
 type AdicionarTreinoNavigationProp = StackNavigationProp<RootStackParamList, 'AdicionarTreino'>;
 
 type Props = {
-  navigation: AdicionarTreinoNavigationProp;
+    navigation: AdicionarTreinoNavigationProp;
 };
 
 
 export default function AdicionarTreino({ navigation }: Props) {
 
     const [treino, setTreino] = useState<Exercicio[]>([]);
-    
-    const [ id, setId ] = useState<number>(1);
-    const [ nomeTreino, setNomeTreino ] = useState('');
-    const [ dataTreino, setDataTreino ] = useState(new Date().toISOString().split('T')[0]); // Formato YYYY-MM-DD
-    const [ nomeExercicio, setNomeExercicio ] = useState('');
-    const [ series, setSeries ] = useState('');
-    const [ reps, setReps ] = useState('');
-    const [ carga, setCarga ] = useState('');
-    const [ diaSemana, setDiaSemana ] = useState('');
+
+    const [id, setId] = useState<number>(1);
+    const [nomeTreino, setNomeTreino] = useState('');
+    const [dataTreino, setDataTreino] = useState(new Date().toISOString().split('T')[0]); // Formato YYYY-MM-DD
+    const [nomeExercicio, setNomeExercicio] = useState('');
+    const [series, setSeries] = useState('');
+    const [reps, setReps] = useState('');
+    const [carga, setCarga] = useState('');
+    const [diaSemana, setDiaSemana] = useState('');
 
     const handleAddExercicio = () => {
         if (nomeExercicio && series && reps && carga) {
@@ -50,10 +51,16 @@ export default function AdicionarTreino({ navigation }: Props) {
     };
 
     const handleRemoveTreino = (nome: string) => {
-    setTreino(prev => prev.filter(item => item.nome !== nome));
-};
+        setTreino(prev => prev.filter(item => item.nome !== nome));
+    };
 
     const handleSalvarTreino = async () => {
+
+        if (!diaSemana.trim() || !nomeTreino.trim()) {
+            alert('Por favor, preencha o Dia da Semana e o Nome do Treino antes de salvar.');
+            return;
+        }
+
         const treinoData: Treino = {
             id: Math.random().toString(36).substring(2, 15),
             diaSemana: diaSemana,
@@ -69,10 +76,32 @@ export default function AdicionarTreino({ navigation }: Props) {
 
         } catch (error) {
             console.error('Erro ao salvar treino:', error);
-            
+
         }
     }
 
+
+    // Logica para Impedir o clique de voltar  do android por acidente
+    useFocusEffect(
+        React.useCallback(() => {
+            const onBackPress = () => {
+                Alert.alert(
+                    'Confirmação',
+                    'Tem certeza que deseja sair? As alterações não salvas serão perdidas.',
+                    [
+                        { text: 'Cancelar', style: 'cancel', onPress: () => { } },
+                        { text: 'Sim', onPress: () => navigation.goBack() },
+                    ],
+                    { cancelable: true }
+                );
+                return true; // impede o comportamento padrão
+            };
+
+            const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => subscription.remove(); // remove o listener corretamente
+        }, [])
+    );
 
     return (
         <View style={styles.container}>
@@ -85,7 +114,7 @@ export default function AdicionarTreino({ navigation }: Props) {
             <View style={styles.content}>
                 <View style={{ flexDirection: 'row', marginBottom: 12 }}>
                     <Text style={styles.Text}>Treinos: </Text>
-                    <View  style={{width: '100%', gap: 8}}>
+                    <View style={{ width: '100%', gap: 8 }}>
                         <TextInput
                             value={diaSemana}
                             onChangeText={setDiaSemana}
@@ -110,9 +139,11 @@ export default function AdicionarTreino({ navigation }: Props) {
                     <Text style={[styles.cell, styles.headerText]}>Carga</Text>
                 </View>
 
-                <ScrollView>
-                    {treino.map((item) => (
-                        <View key={item.nome} style={styles.tableRow}>
+                <FlatList
+                    data={treino}
+                    keyExtractor={item => item.nome}
+                    renderItem={({ item }) => (
+                        <View style={styles.tableRow}>
                             <Text style={styles.cell}>{item.nome}</Text>
                             <Text style={styles.cell}>{item.series}</Text>
                             <Text style={styles.cell}>{item.reps}</Text>
@@ -121,19 +152,19 @@ export default function AdicionarTreino({ navigation }: Props) {
                                 <MaterialCommunityIcons name="trash-can" size={24} color={Colors.Vermelho} />
                             </TouchableOpacity>
                         </View>
-                    ))}
-                </ScrollView>
+                    )}
+                />
 
-                <View style={{width: '100%', flexDirection: 'row', alignItems: 'center', marginTop: 12}}>
+                <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', marginTop: 12 }}>
                     <ScrollView horizontal>
-                        <View style={{flexDirection: 'row'}}>
-                            <TextInput value={nomeExercicio} onChangeText={setNomeExercicio} style={[styles.inputBox, {width: 300}]} placeholder="Digite o exercício..." placeholderTextColor={Colors.Branco}/>
-                            <TextInput value={series} onChangeText={setSeries} style={[styles.inputBox, {width: 60}]} placeholder="Séries" placeholderTextColor={Colors.Branco} keyboardType='numeric'/>
-                            <TextInput value={reps} onChangeText={setReps} style={[styles.inputBox, {width: 60}]} placeholder="Repetições" placeholderTextColor={Colors.Branco} keyboardType='numeric'/>
-                            <TextInput value={carga} onChangeText={setCarga} style={[styles.inputBox, {width: 60}]} placeholder="Carga Atual" placeholderTextColor={Colors.Branco} keyboardType='numeric'/>
+                        <View style={{ flexDirection: 'row' }}>
+                            <TextInput value={nomeExercicio} onChangeText={setNomeExercicio} style={[styles.inputBox, { width: 300 }]} placeholder="Digite o exercício..." placeholderTextColor={Colors.Branco} />
+                            <TextInput value={series} onChangeText={setSeries} style={[styles.inputBox, { width: 60 }]} placeholder="Séries" placeholderTextColor={Colors.Branco} keyboardType='numeric' />
+                            <TextInput value={reps} onChangeText={setReps} style={[styles.inputBox, { width: 60 }]} placeholder="Repetições" placeholderTextColor={Colors.Branco} keyboardType='numeric' />
+                            <TextInput value={carga} onChangeText={setCarga} style={[styles.inputBox, { width: 60 }]} placeholder="Carga Atual" placeholderTextColor={Colors.Branco} keyboardType='numeric' />
                         </View>
                     </ScrollView>
-                   </View>
+                </View>
             </View>
 
             <View style={{ position: 'absolute', bottom: 0, width: '100%' }}>
@@ -222,15 +253,15 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     inputBox: {
-    height: 45,
-    fontSize: 14,
-    color: Colors.Branco,
-    borderColor: Colors.Vermelho,
-    borderBottomWidth: 3,
-    marginBottom: 12,
-    paddingHorizontal: 10,
-    backgroundColor: Colors.TextCinza,
-    marginRight: 8
-  },
+        height: 45,
+        fontSize: 14,
+        color: Colors.Branco,
+        borderColor: Colors.Vermelho,
+        borderBottomWidth: 3,
+        marginBottom: 12,
+        paddingHorizontal: 10,
+        backgroundColor: Colors.TextCinza,
+        marginRight: 8
+    },
 
 });

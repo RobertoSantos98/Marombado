@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Treino } from '../types/treinoModel';
+import { Exercicio, Treino } from '../types/treinoModel';
 
 const TREINO_KEY = 'treino';
 
@@ -31,26 +31,29 @@ export class ExercicioService {
         }
     }
 
-    static async listarExercicios(idTreino: string): Promise<Treino['exercicios']> {
+    static async listarExercicios(idTreino: string): Promise<{ nome: string; exercicios: Exercicio[] }> {
 
         try {
             const treinoSalvo = await AsyncStorage.getItem(TREINO_KEY);
             if (!treinoSalvo) {
                 console.warn('Nenhum treino encontrado.');
-                return [];
+                return { nome: '' , exercicios: []};
             }
 
             const treinos: Treino[] = JSON.parse(treinoSalvo);
             const treinoEncontrado = treinos.find(t => t.id === idTreino);
             if (!treinoEncontrado) {
                 console.warn('Nenhum exercício encontrado para o treino especificado.');
-                return [];
+                return { nome: '' , exercicios: []};
             }
-            return treinoEncontrado.exercicios;
+            return {
+                nome: treinoEncontrado.nome,
+                exercicios: treinoEncontrado.exercicios
+            };
 
         } catch (error) {
             console.error('Erro ao listar exercícios:', error);
-            return [];
+            return { nome: '' , exercicios: []};
             
         }
     }
@@ -71,6 +74,21 @@ export class ExercicioService {
             console.error('Erro ao remover treino:', error);
             
         }
+    }
+
+    static async AdicionarPreferencias(): Promise<void> {
+
+        const config = {
+            mostrarDicaTreino: Boolean,
+        }
+
+        try {
+            const preferencias = await AsyncStorage.setItem('preferencias', JSON.stringify(config));
+            console.log("Preferências salvas.")
+        } catch (error) {
+            console.warn("Erro ao extrair preferências");
+        }
+
     }
 
 

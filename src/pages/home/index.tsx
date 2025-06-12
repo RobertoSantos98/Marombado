@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { Colors } from '../../utils/colors';
 import BoxTreino from '../../components/boxTreino';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -36,63 +36,85 @@ export default function Home({ navigation }: Props) {
     }
   }
 
+  const handleRemoverTreino = (id: any) => {
 
- return (
-   <View style={styles.container}>
+    Alert.alert(
+      'Confirmação',
+      'Tem certeza que deseja remover o treino selecionado?',
+      [
+        { text: 'Cancelar', style: 'cancel', onPress: () => { } },
+        {
+          text: 'Sim', onPress: async () => {
+            try {
+              await ExercicioService.removerTreino(id);
+              handleListTreinos();
+            } catch (error) {
+              console.log("Erro ao buscar a lista de treino.");
+            }
+          }
+        }
+      ]
+    )
+
+  }
+
+
+  return (
+    <View style={styles.container}>
       <View style={styles.headerContainer}>
         <ImageBackground source={require('../../assets/image-1.png')} resizeMode='cover' style={styles.header}>
-          <View style={{bottom: 0, position: 'absolute', left: 20, right: 20, paddingVertical: 20, }}>
+          <View style={{ bottom: 0, position: 'absolute', left: 20, right: 20, paddingVertical: 20, }}>
             <Text style={styles.textTitleHeader} >Sequência Diária</Text>
 
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
 
-              <View style={{alignItems: 'center', marginHorizontal: 5}}>
+              <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
 
                 </TouchableOpacity>
-                <Text style={{color: Colors.Branco, fontSize: 12}} >SEG </Text>
-              </View>
-              
-              <View style={{alignItems: 'center', marginHorizontal: 5}}>
-                <TouchableOpacity style={styles.buttonHeader}>
-
-                </TouchableOpacity>
-                <Text style={{color: Colors.Branco, fontSize: 12}} >TER </Text>
+                <Text style={{ color: Colors.Branco, fontSize: 12 }} >SEG </Text>
               </View>
 
-              <View style={{alignItems: 'center', marginHorizontal: 5}}>
+              <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
 
                 </TouchableOpacity>
-                <Text style={{color: Colors.Branco, fontSize: 12}} >QUA</Text>
+                <Text style={{ color: Colors.Branco, fontSize: 12 }} >TER </Text>
               </View>
 
-              <View style={{alignItems: 'center', marginHorizontal: 5}}>
+              <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
 
                 </TouchableOpacity>
-                <Text style={{color: Colors.Branco, fontSize: 12}} >QUI</Text>
+                <Text style={{ color: Colors.Branco, fontSize: 12 }} >QUA</Text>
               </View>
 
-              <View style={{alignItems: 'center', marginHorizontal: 5}}>
+              <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
 
                 </TouchableOpacity>
-                <Text style={{color: Colors.Branco, fontSize: 12}} >SEX </Text>
+                <Text style={{ color: Colors.Branco, fontSize: 12 }} >QUI</Text>
               </View>
 
-              <View style={{alignItems: 'center', marginHorizontal: 5}}>
+              <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
 
                 </TouchableOpacity>
-                <Text style={{color: Colors.Branco, fontSize: 12}} >SAB </Text>
+                <Text style={{ color: Colors.Branco, fontSize: 12 }} >SEX </Text>
               </View>
 
-              <View style={{alignItems: 'center', marginHorizontal: 5}}>
+              <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
 
                 </TouchableOpacity>
-                <Text style={{color: Colors.Branco, fontSize: 12}} >DOM </Text>
+                <Text style={{ color: Colors.Branco, fontSize: 12 }} >SAB </Text>
+              </View>
+
+              <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
+                <TouchableOpacity style={styles.buttonHeader}>
+
+                </TouchableOpacity>
+                <Text style={{ color: Colors.Branco, fontSize: 12 }} >DOM </Text>
               </View>
 
             </ScrollView>
@@ -102,45 +124,46 @@ export default function Home({ navigation }: Props) {
 
       <View style={styles.contentMain}>
         <ScrollView>
-            {listTreinos.map((treino) => (
-              <BoxTreino key={treino.id} id={treino.id} diaSemana={treino.diaSemana} nomeTreino={treino.nome} />
-            ))}
+          {listTreinos.map((treino) => (
+            <BoxTreino key={treino.id} id={treino.id} diaSemana={treino.diaSemana} nomeTreino={treino.nome} handleRemoverTreino={handleRemoverTreino} />
+          ))}
 
-            <TouchableOpacity
-              style={{ width: '100%', height: 40, backgroundColor: Colors.TextCinza, borderRadius: 10, marginVertical: 10, alignItems: 'center', justifyContent: 'center' }}
-              onPress={() => navigation.navigate('AdicionarTreino')}
-            >
-              <MaterialCommunityIcons name='plus-thick' size={24} color={Colors.Vermelho} />
-            </TouchableOpacity>
+          <TouchableOpacity
+            style={{ width: '100%', height: 40, backgroundColor: Colors.TextCinza, borderRadius: 10, marginVertical: 10, alignItems: 'center', justifyContent: 'center' }}
+            onPress={() => navigation.navigate('AdicionarTreino')}
+          >
+            <MaterialCommunityIcons name='plus-thick' size={24} color={Colors.Vermelho} />
+          </TouchableOpacity>
+
 
         </ScrollView>
       </View>
-        
-   </View>
+
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     flex: 1,
     backgroundColor: '#000',
   },
-  headerContainer:{
+  headerContainer: {
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
     width: '100%',
     height: 300,
     overflow: 'hidden',
   },
-  header:{
+  header: {
     width: '100%',
     height: '100%',
   },
-  textTitleHeader:{
+  textTitleHeader: {
     fontSize: 26,
     color: Colors.Branco
   },
-  buttonHeader:{
+  buttonHeader: {
     width: 40,
     height: 40,
     backgroundColor: Colors.FundoCards,
@@ -149,12 +172,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
   },
-  contentMain:{
+  contentMain: {
     marginHorizontal: '5%',
     marginTop: 12,
   },
 
 
 
-  
+
 })
