@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import Navigation from './src/pages/navigation';
-import TreinoDetails from './src/pages/TreinoDetails';
 
 export default function App() {
 

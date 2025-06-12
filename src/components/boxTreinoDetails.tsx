@@ -1,10 +1,10 @@
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { Colors } from '../utils/colors';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming, runOnJS, interpolateColor } from 'react-native-reanimated';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
-
+import { useState } from 'react';
 
 type Props = {
   nomeExercicio: string;
@@ -12,7 +12,6 @@ type Props = {
   onSwipeRight?: () => void;
   onSwipeLeft?: () => void;
 }
-
 
 export default function BoxTreinoDetails({ nomeExercicio, series, onSwipeRight, onSwipeLeft }: Props) {
 

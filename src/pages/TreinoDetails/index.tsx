@@ -1,19 +1,52 @@
-import { View, StyleSheet, Text, FlatList } from 'react-native';
+import { View, StyleSheet, Text, FlatList, Image } from 'react-native';
 import { Colors } from '../../utils/colors';
 import BoxTreinoDetails from '../../components/boxTreinoDetails';
 import React, { useState, useRef, useMemo, useCallback } from 'react';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
+import AppIntroSlider from 'react-native-app-intro-slider'
 
 import Cronometro from '../../components/cronometro';
-
 
 type Props = {
     nomeTreino: string;
     exercicios?: string[];
 }
 
+const slides = [
+  {
+    key: 1,
+    title: 'Deslize para a esquerda quando completar uma serie de repetições',
+    text: 'Isso fará com que a contagem das séries diminua.',
+    image: require('../../assets/slider/image-slide-1.png')
+  },
+  {
+    key: 2,
+    title: 'Deslize para a direita quando terminar uma série por completa',
+    text: 'Isso excluirá o exercicio da lista.',
+    image: require('../../assets/slider/image-slide-2.png')
+  },
+  {
+    key: 3,
+    title: 'Você pode usar o cronômetro dentro do app. Apenas puxe para cima',
+    text: 'E você pode iniciar ou zerar a cada descanso.',
+    image: require('../../assets/slider/image-slide-3.png')
+  }
+]
+
+function renderSlides({item}: any){
+  return(
+    <View style={{flex: 1, backgroundColor: "#000", alignItems: 'center', justifyContent: 'center', gap: '5%'}}>
+      <Text style={{color: Colors.Branco, fontSize: 24, textAlign: 'center', paddingHorizontal: 12}} >{item.title} </Text>
+      <Image source={item.image} style={{resizeMode: 'cover', width: '90%'}} />
+      <Text style={{color: Colors.Branco, fontSize: 18, textAlign: 'center', paddingHorizontal: 12}}>{item.text} </Text>
+    </View>
+  )
+}
+
 export default function TreinoDetails() {
+
+    const [showIntro, setShowIntro] = useState(true);
+
 
     const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -70,7 +103,24 @@ export default function TreinoDetails() {
     };
 
 
-
+    if (showIntro) {
+        return (
+            <AppIntroSlider
+                renderItem={renderSlides}
+                data={slides}
+                activeDotStyle={{
+                    backgroundColor: Colors.Vermelho,
+                    width: 30
+                }}
+                dotStyle={{
+                    backgroundColor: Colors.TextCinza
+                }}
+                renderNextButton={() => <Text style={{fontSize: 16, color: Colors.Branco}}></Text>}
+                renderDoneButton={() => <Text style={{fontSize: 16, color: Colors.Branco}} >FECHAR </Text>}
+                onDone={() => (setShowIntro(false))}
+            />
+        );
+    } else {
     return (
         <View style={styles.container}>
 
@@ -99,7 +149,7 @@ export default function TreinoDetails() {
                 snapPoints={snapPoints}
                 index={0}
                 enablePanDownToClose={false}
-                backgroundStyle={{ backgroundColor: Colors.TextCinza, borderTopLeftRadius: 12, borderTopRightRadius: 12, borderColor: "#000", borderWidth: 2 }}
+                backgroundStyle={{ backgroundColor: Colors.TextCinza, borderTopLeftRadius: 12, borderTopRightRadius: 12, borderColor: "#000", borderTopWidth: 2 }}
                 handleIndicatorStyle={{ backgroundColor: '#888', width: 50, borderRadius: 3 }}
                 enableContentPanningGesture={false} // impede que o conteúdo arraste
                 enableHandlePanningGesture={true}   // permite apenas puxar pela handle
@@ -115,6 +165,7 @@ export default function TreinoDetails() {
 
         </View>
     );
+}
 }
 
 const styles = StyleSheet.create({
