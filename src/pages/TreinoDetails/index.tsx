@@ -51,19 +51,19 @@ type TreinoDetailsRouteProp = RouteProp<RootStackParamList, 'TreinoDetails'>;
 
 export default function TreinoDetails() {
 
-    useEffect(()=>{
+    useEffect(() => {
         handleList();
-    },[])
+    }, [])
 
     const route = useRoute<TreinoDetailsRouteProp>();
     const { id } = route.params;
 
-    const [ nome, setNome ] = useState<string>();
+    const [nome, setNome] = useState<string>();
     const [showIntro, setShowIntro] = useState(true);
     const [exercicios, setExercicios] = useState<Exercicio[]>();
 
     const handleList = async () => {
-        const {nome , exercicios} = await ExercicioService.listarExercicios(id)
+        const { nome, exercicios } = await ExercicioService.listarExercicios(id)
         setExercicios(exercicios);
         setNome(nome);
     };
@@ -83,7 +83,9 @@ export default function TreinoDetails() {
     };
 
 
-    const handleExerciseDone = (id: number) => {
+    const handleExerciseDone = async (id: number) => {
+        let terminou = false;
+
         setExercicios((prev) => {
             if (!prev) return [];
 
@@ -93,7 +95,8 @@ export default function TreinoDetails() {
                         const newSeries = Number(ex.series) - 1;
 
                         if (newSeries <= 0) {
-                            return null; // será filtrado depois
+                            terminou = true;
+                            return null;
                         }
 
                         return { ...ex, series: newSeries.toString() };
@@ -104,6 +107,11 @@ export default function TreinoDetails() {
 
             return updated;
         });
+
+        if (terminou) {
+            console.log("Treino Finalizado");
+            await ExercicioService.atualizarDiaria();
+        }
     };
 
 

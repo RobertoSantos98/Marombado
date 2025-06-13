@@ -6,6 +6,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../types/navigation';
 import { useEffect, useState } from 'react';
 import { Treino } from '../../types/treinoModel';
+import { Diaria } from '../../types/diaria'
 
 import { ExercicioService } from '../../service/ExercicioService';
 import TreinoDetails from '../TreinoDetails';
@@ -21,9 +22,13 @@ type Props = {
 export default function Home({ navigation }: Props) {
 
   const [listTreinos, setListTreinos] = useState<Treino[]>([]);
+  const [ sequencia, setSequencia ] = useState<Diaria>();
+
+
 
   useEffect(() => {
     handleListTreinos();
+    handleSequencia();
   }, []);
 
   const handleListTreinos = async () => {
@@ -33,6 +38,15 @@ export default function Home({ navigation }: Props) {
       console.log("Treinos listados com sucesso:", treinos);
     } catch (error) {
       console.error("Erro ao listar treinos:", error);
+    }
+  }
+
+  const handleSequencia = async () => {
+    try {
+      const response = await ExercicioService.getSequencia();
+      setSequencia(response);
+    } catch (error) {
+      console.log("Erro ao recuperar a sequencia.")
     }
   }
 
@@ -70,49 +84,49 @@ export default function Home({ navigation }: Props) {
 
               <View style={{ marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
-
+                  {sequencia?.segunda ? <MaterialCommunityIcons name='dumbbell' size={36} color={Colors.Vermelho} /> : <></>}
                 </TouchableOpacity>
                 <Text style={{ color: Colors.Branco, fontSize: 12, textAlign: 'center'  }} >SEG </Text>
               </View>
 
               <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
-
+                  {sequencia?.terça ? <MaterialCommunityIcons name='dumbbell' size={36} color={Colors.Vermelho} /> : <></>}
                 </TouchableOpacity>
                 <Text style={{ color: Colors.Branco, fontSize: 12, textAlign: 'center'  }} >TER </Text>
               </View>
 
               <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
-
+                  {sequencia?.quarta ? <MaterialCommunityIcons name='dumbbell' size={36} color={Colors.Vermelho} /> : <></>}
                 </TouchableOpacity>
                 <Text style={{ color: Colors.Branco, fontSize: 12, textAlign: 'center'  }} >QUA</Text>
               </View>
 
               <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
-
+                  {sequencia?.quinta ? <MaterialCommunityIcons name='dumbbell' size={36} color={Colors.Vermelho} /> : <></>}
                 </TouchableOpacity>
                 <Text style={{ color: Colors.Branco, fontSize: 12, textAlign: 'center'  }} >QUI</Text>
               </View>
 
               <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
-
+                  {sequencia?.sexta ? <MaterialCommunityIcons name='dumbbell' size={36} color={Colors.Vermelho} /> : <></>}
                 </TouchableOpacity>
                 <Text style={{ color: Colors.Branco, fontSize: 12, textAlign: 'center'  }} >SEX </Text>
               </View>
 
               <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
-
+                  {sequencia?.sabado ? <MaterialCommunityIcons name='dumbbell' size={36} color={Colors.Vermelho} /> : <></>}
                 </TouchableOpacity>
                 <Text style={{ color: Colors.Branco, fontSize: 12, textAlign: 'center' }} >SAB </Text>
               </View>
 
               <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
-
+                  {sequencia?.domingo ? <MaterialCommunityIcons name='dumbbell' size={36} color={Colors.Vermelho} /> : <></>}
                 </TouchableOpacity>
                 <Text style={{ color: Colors.Branco, fontSize: 12, textAlign: 'center'  }} >DOM </Text>
               </View>
