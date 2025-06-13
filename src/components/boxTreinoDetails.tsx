@@ -4,7 +4,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colors } from '../utils/colors';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming, runOnJS, interpolateColor } from 'react-native-reanimated';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
-import { useState } from 'react';
 
 type Props = {
   nomeExercicio: string;

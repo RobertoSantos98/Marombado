@@ -68,53 +68,53 @@ export default function Home({ navigation }: Props) {
 
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
 
-              <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
+              <View style={{ marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
 
                 </TouchableOpacity>
-                <Text style={{ color: Colors.Branco, fontSize: 12 }} >SEG </Text>
+                <Text style={{ color: Colors.Branco, fontSize: 12, textAlign: 'center'  }} >SEG </Text>
               </View>
 
               <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
 
                 </TouchableOpacity>
-                <Text style={{ color: Colors.Branco, fontSize: 12 }} >TER </Text>
+                <Text style={{ color: Colors.Branco, fontSize: 12, textAlign: 'center'  }} >TER </Text>
               </View>
 
               <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
 
                 </TouchableOpacity>
-                <Text style={{ color: Colors.Branco, fontSize: 12 }} >QUA</Text>
+                <Text style={{ color: Colors.Branco, fontSize: 12, textAlign: 'center'  }} >QUA</Text>
               </View>
 
               <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
 
                 </TouchableOpacity>
-                <Text style={{ color: Colors.Branco, fontSize: 12 }} >QUI</Text>
+                <Text style={{ color: Colors.Branco, fontSize: 12, textAlign: 'center'  }} >QUI</Text>
               </View>
 
               <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
 
                 </TouchableOpacity>
-                <Text style={{ color: Colors.Branco, fontSize: 12 }} >SEX </Text>
+                <Text style={{ color: Colors.Branco, fontSize: 12, textAlign: 'center'  }} >SEX </Text>
               </View>
 
               <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
 
                 </TouchableOpacity>
-                <Text style={{ color: Colors.Branco, fontSize: 12 }} >SAB </Text>
+                <Text style={{ color: Colors.Branco, fontSize: 12, textAlign: 'center' }} >SAB </Text>
               </View>
 
               <View style={{ alignItems: 'center', marginHorizontal: 5 }}>
                 <TouchableOpacity style={styles.buttonHeader}>
 
                 </TouchableOpacity>
-                <Text style={{ color: Colors.Branco, fontSize: 12 }} >DOM </Text>
+                <Text style={{ color: Colors.Branco, fontSize: 12, textAlign: 'center'  }} >DOM </Text>
               </View>
 
             </ScrollView>
@@ -160,8 +160,9 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   textTitleHeader: {
-    fontSize: 26,
-    color: Colors.Branco
+    fontSize: 36,
+    color: Colors.Branco,
+    fontFamily: 'BebasNeue_400Regular'
   },
   buttonHeader: {
     width: 40,

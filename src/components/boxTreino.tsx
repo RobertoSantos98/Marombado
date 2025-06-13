@@ -17,13 +17,16 @@ type Props = {
 
 export default function BoxTreino({ diaSemana, nomeTreino, id, handleRemoverTreino }: Props) {
 
+
+
     const navigation = useNavigation<DetailsNavigationProp>();
+
 
     return (
         <View style={styles.boxTreino}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10 }}>
+            <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10 }} onPress={()=> { navigation.navigate('TreinoList', {id})}} >
                 <View style={{ gap: 5, justifyContent: 'space-around' }}>
-                    <Text style={{ color: Colors.Branco, fontSize: 18 }}>{nomeTreino} </Text>
+                    <Text style={styles.textTitle}>{nomeTreino} </Text>
                     <Text style={{ color: Colors.Branco, fontSize: 12 }}>{diaSemana} </Text>
                 </View>
                 <View style={{alignItems: 'flex-end', justifyContent: 'space-around', gap: 8}}>
@@ -35,7 +38,7 @@ export default function BoxTreino({ diaSemana, nomeTreino, id, handleRemoverTrei
                     </TouchableOpacity>
                     
                 </View>
-            </View>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -49,4 +52,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: 10,
     },
+    textTitle:{ 
+        color: Colors.Branco, 
+        fontSize: 24, 
+        fontFamily: 'BebasNeue_400Regular' }
 })

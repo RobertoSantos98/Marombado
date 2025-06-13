@@ -91,6 +91,28 @@ export class ExercicioService {
 
     }
 
+    static async atualizarTreino(TreinoNovo: Exercicio[], id: string): Promise<void>{
+
+        try {
+            const response = await AsyncStorage.getItem(TREINO_KEY);
+            const treinos: Treino[] = response ? JSON.parse(response): [];
+            const treinoAtualizado = treinos.map(treino => {
+                if (treino.id === id) {
+                    return {
+                        ...treino,
+                        exercicios: TreinoNovo,
+                    };
+                }
+                return treino;
+            })
+
+            await AsyncStorage.setItem(TREINO_KEY, JSON.stringify(treinoAtualizado));
+
+        } catch (error) {
+            console.log("Erro ao persistir os dados com asyncStorage");
+        }
+
+    }
 
 
 }

@@ -5,6 +5,7 @@ import { RootStackParamList } from '../types/navigation';
 import Home from './home';
 import AdicionarTreino from './AdicionarTreino';
 import TreinoDetails from './TreinoDetails';
+import TreinoList from './TreinoList';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -15,6 +16,7 @@ export default function MyStack() {
                 <Stack.Screen name="Home" component={Home} />
                 <Stack.Screen name="AdicionarTreino" component={AdicionarTreino} />
                 <Stack.Screen name="TreinoDetails" component={TreinoDetails} />
+                <Stack.Screen name="TreinoList" component={TreinoList} />
             </Stack.Navigator>
         </NavigationContainer>
     )
